@@ -39,11 +39,14 @@ namespace PlayFabPowerTools.Packages
         private commandArgs _commandArgs;
 
         private CancellationTokenSource _cts = new CancellationTokenSource();
-        //private TitleDataMigration _titleData;
-        //private TitleDataMigration _titleInternalData;
-        private CurrencyDataMigration _currencyData;
-        //private CloudScriptDataMigration _cloudScriptData;
-        private CdnFileDataMigration _cdnData;
+		// TITLEDATA_COMMENT
+		//private TitleDataMigration _titleData;
+		// TITLEDATAINTERNAL_COMMENT
+		//private TitleDataMigration _titleInternalData;
+		private CurrencyDataMigration _currencyData;
+		// CLOUDSCRIPT_COMMENT
+		//private CloudScriptDataMigration _cloudScriptData;
+		private CdnFileDataMigration _cdnData;
         private CatalogDataMigration _catalogData;
         private DropTableDataMigration _droptableData;
         private StoreDataMigration _storeData;
@@ -74,12 +77,15 @@ namespace PlayFabPowerTools.Packages
             _commandArgs.FromTitleId = lineSplit[1];
             _commandArgs.ToTitleId = lineSplit[2];
 
-            //SetUp Data Objects
-            //_titleData = new TitleDataMigration();
-            //_titleInternalData = new TitleDataMigration();
-            _currencyData = new CurrencyDataMigration();
-            //_cloudScriptData = new CloudScriptDataMigration();
-            _cdnData = new CdnFileDataMigration();
+			//SetUp Data Objects
+			// TITLEDATA_COMMENT
+			//_titleData = new TitleDataMigration();
+			// TITLEDATAINTERNAL_COMMENT
+			//_titleInternalData = new TitleDataMigration();
+			_currencyData = new CurrencyDataMigration();
+			// CLOUDSCRIPT_COMMENT
+			//_cloudScriptData = new CloudScriptDataMigration();
+			_cdnData = new CdnFileDataMigration();
             _catalogData = new CatalogDataMigration();
             _droptableData = new DropTableDataMigration();
             _storeData = new StoreDataMigration
@@ -158,6 +164,7 @@ namespace PlayFabPowerTools.Packages
         {
             switch (_state)
             {
+				// TITLEDATA_COMMENT_START
 				//case States.TitleData:
 				//	#region Update Title Data Keys
 				//	if (!_titleData.FromProcessed)
@@ -201,6 +208,8 @@ namespace PlayFabPowerTools.Packages
 				//	}
 				//	#endregion
 				//	break;
+				// TITLEDATA_COMMENT_END
+				// TITLEDATAINTERNAL_COMMENT_START
 				//case States.TitleInternalData:
 				//	#region Update Title Internal Data Keys
 				//	if (!_titleInternalData.FromProcessed)
@@ -244,6 +253,7 @@ namespace PlayFabPowerTools.Packages
 				//	}
 				//	#endregion
 				//	break;
+				// TITLEDATAINTERNAL_COMMENT_END
 				case States.Currency:
                     #region Update Currency Types
                     if (!_currencyData.FromProcessed)
@@ -285,50 +295,52 @@ namespace PlayFabPowerTools.Packages
                     }
                     #endregion
                     break;
-                //case States.CloudScript:
-                //    #region Update CloudScript File
-                //    if (!_cloudScriptData.FromProcessed)
-                //    {
-                //        Console.WriteLine("Getting CloudScript Data from: " + _commandArgs.FromTitleId);
-                //        PlayFabService.GetCloudScript(_commandArgs.FromTitleId, (success, data) =>
-                //        {
-                //            if (!success || data.Count == 0)
-                //            {
-                //                Console.WriteLine("Error Fetching CloudScript Data, skipping.");
-                //                SetNextState();
-                //                return;
-                //            }
-                //            _cloudScriptData.Data = data;
-                //            _cloudScriptData.FromProcessed = true;
-                //        });
-                //    }
+				// CLOUDSCRIPT_COMMENT_START
+				//case States.CloudScript:
+				//    #region Update CloudScript File
+				//    if (!_cloudScriptData.FromProcessed)
+				//    {
+				//        Console.WriteLine("Getting CloudScript Data from: " + _commandArgs.FromTitleId);
+				//        PlayFabService.GetCloudScript(_commandArgs.FromTitleId, (success, data) =>
+				//        {
+				//            if (!success || data.Count == 0)
+				//            {
+				//                Console.WriteLine("Error Fetching CloudScript Data, skipping.");
+				//                SetNextState();
+				//                return;
+				//            }
+				//            _cloudScriptData.Data = data;
+				//            _cloudScriptData.FromProcessed = true;
+				//        });
+				//    }
 
-                //    if (!_cloudScriptData.ToProcessed && _cloudScriptData.FromProcessed)
-                //    {
+				//    if (!_cloudScriptData.ToProcessed && _cloudScriptData.FromProcessed)
+				//    {
 
-                //        if (_cloudScriptData.Data == null)
-                //        {
-                //            _cloudScriptData.ToProcessed = true;
-                //            SetNextState();
-                //            break;
-                //        }
+				//        if (_cloudScriptData.Data == null)
+				//        {
+				//            _cloudScriptData.ToProcessed = true;
+				//            SetNextState();
+				//            break;
+				//        }
 
-                //        Console.WriteLine("Updating CloudScript on Title: " + _commandArgs.ToTitleId);
+				//        Console.WriteLine("Updating CloudScript on Title: " + _commandArgs.ToTitleId);
 
-                //        PlayFabService.UpdateCloudScript(_commandArgs.ToTitleId, _cloudScriptData.Data,
-                //            (success) =>
-                //            {
-                //                //if (!success)
-                //                //{
-                //                //    Console.WriteLine("Save CloudScript Failed.");
-                //                //    _cts.Cancel();
-                //                //}
-                //                _cloudScriptData.Data = null;
-                //            });
-                //    }
-                //    #endregion
-                //    break;
-                case States.Files:
+				//        PlayFabService.UpdateCloudScript(_commandArgs.ToTitleId, _cloudScriptData.Data,
+				//            (success) =>
+				//            {
+				//                //if (!success)
+				//                //{
+				//                //    Console.WriteLine("Save CloudScript Failed.");
+				//                //    _cts.Cancel();
+				//                //}
+				//                _cloudScriptData.Data = null;
+				//            });
+				//    }
+				//    #endregion
+				//    break;
+				// CLOUDSCRIPT_COMMENT_END
+				case States.Files:
                     #region Update Content Files
                     //Start by creating a temp directory
                     var path = AppDomain.CurrentDomain.BaseDirectory + "temp";

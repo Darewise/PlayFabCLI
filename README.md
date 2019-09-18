@@ -36,3 +36,16 @@ There are currently only a few commands that the tool can do right now.
 4. Help - Display a help screen
 5. Exit - Exit Console Mode
 
+The migrate command will migrate :
+Files
+Currency
+Catalogs
+DropTables
+Stores
+
+The program is been edited to not migrate:
+TitleData
+TitleDataInternal
+CloudScripts
+
+Remove the comments in PlayFabPowerTools/Packages/PlayFabMigrateTitlePackage.cs to reenable it
