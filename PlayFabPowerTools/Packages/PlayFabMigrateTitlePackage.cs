@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,9 +17,9 @@ namespace PlayFabPowerTools.Packages
         private enum States
         {
             Idle,
-            TitleData,
-            TitleInternalData,
-            CloudScript,
+            //TitleData,
+            //TitleInternalData,
+            //CloudScript,
             Files,
             Currency,
             Catalogs,
@@ -39,10 +39,10 @@ namespace PlayFabPowerTools.Packages
         private commandArgs _commandArgs;
 
         private CancellationTokenSource _cts = new CancellationTokenSource();
-        private TitleDataMigration _titleData;
-        private TitleDataMigration _titleInternalData;
+        //private TitleDataMigration _titleData;
+        //private TitleDataMigration _titleInternalData;
         private CurrencyDataMigration _currencyData;
-        private CloudScriptDataMigration _cloudScriptData;
+        //private CloudScriptDataMigration _cloudScriptData;
         private CdnFileDataMigration _cdnData;
         private CatalogDataMigration _catalogData;
         private DropTableDataMigration _droptableData;
@@ -75,10 +75,10 @@ namespace PlayFabPowerTools.Packages
             _commandArgs.ToTitleId = lineSplit[2];
 
             //SetUp Data Objects
-            _titleData = new TitleDataMigration();
-            _titleInternalData = new TitleDataMigration();
+            //_titleData = new TitleDataMigration();
+            //_titleInternalData = new TitleDataMigration();
             _currencyData = new CurrencyDataMigration();
-            _cloudScriptData = new CloudScriptDataMigration();
+            //_cloudScriptData = new CloudScriptDataMigration();
             _cdnData = new CdnFileDataMigration();
             _catalogData = new CatalogDataMigration();
             _droptableData = new DropTableDataMigration();
@@ -125,18 +125,18 @@ namespace PlayFabPowerTools.Packages
             {
                 case States.Complete:
                 case States.Idle:
-                    _state = States.TitleData;
-                    break;
-                case States.TitleData:
-                    _state = States.TitleInternalData;
-                    break;
-                case States.TitleInternalData:
+                //    _state = States.TitleData;
+                //    break;
+                //case States.TitleData:
+                //    _state = States.TitleInternalData;
+                //    break;
+                //case States.TitleInternalData:
                     _state = States.Currency;
                     break;
                 case States.Currency:
-                    _state = States.CloudScript;
-                    break;
-                case States.CloudScript:
+                //    _state = States.CloudScript;
+                //    break;
+                //case States.CloudScript:
                     _state = States.Files;
                     break;
                 case States.Files:
@@ -158,92 +158,93 @@ namespace PlayFabPowerTools.Packages
         {
             switch (_state)
             {
-                case States.TitleData:
-                    #region Update Title Data Keys
-                    if (!_titleData.FromProcessed)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("Getting Title Data from: " + _commandArgs.FromTitleId);
-                        PlayFabService.GetTitleData(_commandArgs.FromTitleId,(success,result) =>
-                        {
-                            if (!success || result.Data.Count == 0)
-                            {
-                                Console.WriteLine("No Title Data found, skipping");
-                                SetNextState();
-                            }
-                            else
-                            {
-                                Console.WriteLine("Title Data Keys Found: " + result.Data.Count.ToString());
-                                _titleData.Data = result.Data;
-                                _titleData.FromProcessed = true;
-                            }
-                        });
-                    }
+				//case States.TitleData:
+				//	#region Update Title Data Keys
+				//	if (!_titleData.FromProcessed)
+				//	{
+				//		Console.ForegroundColor = ConsoleColor.Yellow;
+				//		Console.WriteLine("Getting Title Data from: " + _commandArgs.FromTitleId);
+				//		PlayFabService.GetTitleData(_commandArgs.FromTitleId, (success, result) =>
+				//		 {
+				//			 if (!success || result.Data.Count == 0)
+				//			 {
+				//				 Console.WriteLine("No Title Data found, skipping");
+				//				 SetNextState();
+				//			 }
+				//			 else
+				//			 {
+				//				 Console.WriteLine("Title Data Keys Found: " + result.Data.Count.ToString());
+				//				 _titleData.Data = result.Data;
+				//				 _titleData.FromProcessed = true;
+				//			 }
+				//		 });
+				//	}
 
-                    if (!_titleData.ToProcessed && _titleData.FromProcessed)
-                    {
-                        if (_titleData.Data.Count == 0)
-                        {
-                            _titleData.ToProcessed = true;
-                            SetNextState();
-                            break;
-                        }
-                        var kvp = _titleData.Pop();
-                        Console.WriteLine("Saving Title Data from: " + _commandArgs.FromTitleId + " To: " + _commandArgs.ToTitleId);
-                        PlayFabService.UpdateTitleData(_commandArgs.ToTitleId, kvp , (success) =>
-                        {
-                            if (!success) { 
-                                Console.WriteLine("Save Title Data Failed, skipping");
-                                SetNextState();
-                            }
-                        });
-                    }
-                    #endregion
-                    break;
-                case States.TitleInternalData:
-                    #region Update Title Internal Data Keys
-                    if (!_titleInternalData.FromProcessed)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("Getting Title Interal Data from: " + _commandArgs.FromTitleId);
-                        PlayFabService.GetTitleInternalData(_commandArgs.FromTitleId, (success, result) =>
-                        {
-                            if (!success || result.Data.Count == 0)
-                            {
-                                Console.WriteLine("No Title Internal Data found, skipping");
-                                SetNextState();
-                            }
-                            else
-                            {
-                                Console.WriteLine("Title Internal Data Keys Found: " + result.Data.Count.ToString());
-                                _titleInternalData.Data = result.Data;
-                                _titleInternalData.FromProcessed = true;
-                            }
-                        });
-                    }
+				//	if (!_titleData.ToProcessed && _titleData.FromProcessed)
+				//	{
+				//		if (_titleData.Data.Count == 0)
+				//		{
+				//			_titleData.ToProcessed = true;
+				//			SetNextState();
+				//			break;
+				//		}
+				//		var kvp = _titleData.Pop();
+				//		Console.WriteLine("Saving Title Data from: " + _commandArgs.FromTitleId + " To: " + _commandArgs.ToTitleId);
+				//		PlayFabService.UpdateTitleData(_commandArgs.ToTitleId, kvp, (success) =>
+				//	   {
+				//		   if (!success)
+				//		   {
+				//			   Console.WriteLine("Save Title Data Failed, skipping");
+				//			   SetNextState();
+				//		   }
+				//	   });
+				//	}
+				//	#endregion
+				//	break;
+				//case States.TitleInternalData:
+				//	#region Update Title Internal Data Keys
+				//	if (!_titleInternalData.FromProcessed)
+				//	{
+				//		Console.ForegroundColor = ConsoleColor.Yellow;
+				//		Console.WriteLine("Getting Title Interal Data from: " + _commandArgs.FromTitleId);
+				//		PlayFabService.GetTitleInternalData(_commandArgs.FromTitleId, (success, result) =>
+				//		{
+				//			if (!success || result.Data.Count == 0)
+				//			{
+				//				Console.WriteLine("No Title Internal Data found, skipping");
+				//				SetNextState();
+				//			}
+				//			else
+				//			{
+				//				Console.WriteLine("Title Internal Data Keys Found: " + result.Data.Count.ToString());
+				//				_titleInternalData.Data = result.Data;
+				//				_titleInternalData.FromProcessed = true;
+				//			}
+				//		});
+				//	}
 
-                    if (!_titleInternalData.ToProcessed && _titleInternalData.FromProcessed)
-                    {
-                        if (_titleInternalData.Data.Count == 0)
-                        {
-                            _titleInternalData.ToProcessed = true;
-                            SetNextState();
-                            break;
-                        }
-                        var kvp = _titleInternalData.Pop();
-                        Console.WriteLine("Saving Title Interal Data from: " + _commandArgs.FromTitleId + " To: " + _commandArgs.ToTitleId);
-                        PlayFabService.UpdateTitleInternalData(_commandArgs.ToTitleId, kvp, (success) =>
-                        {
-                            if (!success)
-                            {
-                                Console.WriteLine("Save Title Interal Data Failed, skipping");
-                                SetNextState();
-                            }
-                        });
-                    }
-                    #endregion
-                    break;
-                case States.Currency:
+				//	if (!_titleInternalData.ToProcessed && _titleInternalData.FromProcessed)
+				//	{
+				//		if (_titleInternalData.Data.Count == 0)
+				//		{
+				//			_titleInternalData.ToProcessed = true;
+				//			SetNextState();
+				//			break;
+				//		}
+				//		var kvp = _titleInternalData.Pop();
+				//		Console.WriteLine("Saving Title Interal Data from: " + _commandArgs.FromTitleId + " To: " + _commandArgs.ToTitleId);
+				//		PlayFabService.UpdateTitleInternalData(_commandArgs.ToTitleId, kvp, (success) =>
+				//		{
+				//			if (!success)
+				//			{
+				//				Console.WriteLine("Save Title Interal Data Failed, skipping");
+				//				SetNextState();
+				//			}
+				//		});
+				//	}
+				//	#endregion
+				//	break;
+				case States.Currency:
                     #region Update Currency Types
                     if (!_currencyData.FromProcessed)
                     {
@@ -284,49 +285,49 @@ namespace PlayFabPowerTools.Packages
                     }
                     #endregion
                     break;
-                case States.CloudScript:
-                    #region Update CloudScript File
-                    if (!_cloudScriptData.FromProcessed)
-                    {
-                        Console.WriteLine("Getting CloudScript Data from: " + _commandArgs.FromTitleId);
-                        PlayFabService.GetCloudScript(_commandArgs.FromTitleId, (success, data) =>
-                        {
-                            if (!success || data.Count == 0)
-                            {
-                                Console.WriteLine("Error Fetching CloudScript Data, skipping.");
-                                SetNextState();
-                                return;
-                            }
-                            _cloudScriptData.Data = data;
-                            _cloudScriptData.FromProcessed = true;
-                        });
-                    }
+                //case States.CloudScript:
+                //    #region Update CloudScript File
+                //    if (!_cloudScriptData.FromProcessed)
+                //    {
+                //        Console.WriteLine("Getting CloudScript Data from: " + _commandArgs.FromTitleId);
+                //        PlayFabService.GetCloudScript(_commandArgs.FromTitleId, (success, data) =>
+                //        {
+                //            if (!success || data.Count == 0)
+                //            {
+                //                Console.WriteLine("Error Fetching CloudScript Data, skipping.");
+                //                SetNextState();
+                //                return;
+                //            }
+                //            _cloudScriptData.Data = data;
+                //            _cloudScriptData.FromProcessed = true;
+                //        });
+                //    }
 
-                    if (!_cloudScriptData.ToProcessed && _cloudScriptData.FromProcessed)
-                    {
+                //    if (!_cloudScriptData.ToProcessed && _cloudScriptData.FromProcessed)
+                //    {
 
-                        if (_cloudScriptData.Data == null)
-                        {
-                            _cloudScriptData.ToProcessed = true;
-                            SetNextState();
-                            break;
-                        }
+                //        if (_cloudScriptData.Data == null)
+                //        {
+                //            _cloudScriptData.ToProcessed = true;
+                //            SetNextState();
+                //            break;
+                //        }
 
-                        Console.WriteLine("Updating CloudScript on Title: " + _commandArgs.ToTitleId);
+                //        Console.WriteLine("Updating CloudScript on Title: " + _commandArgs.ToTitleId);
 
-                        PlayFabService.UpdateCloudScript(_commandArgs.ToTitleId, _cloudScriptData.Data,
-                            (success) =>
-                            {
-                                //if (!success)
-                                //{
-                                //    Console.WriteLine("Save CloudScript Failed.");
-                                //    _cts.Cancel();
-                                //}
-                                _cloudScriptData.Data = null;
-                            });
-                    }
-                    #endregion
-                    break;
+                //        PlayFabService.UpdateCloudScript(_commandArgs.ToTitleId, _cloudScriptData.Data,
+                //            (success) =>
+                //            {
+                //                //if (!success)
+                //                //{
+                //                //    Console.WriteLine("Save CloudScript Failed.");
+                //                //    _cts.Cancel();
+                //                //}
+                //                _cloudScriptData.Data = null;
+                //            });
+                //    }
+                //    #endregion
+                //    break;
                 case States.Files:
                     #region Update Content Files
                     //Start by creating a temp directory
